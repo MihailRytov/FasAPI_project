@@ -8,12 +8,14 @@ class Brand(Base):
     title = Column(
         VARCHAR(32),
         unique=True,
+        nullable=False,
     )
 
 
 class Product(Base):
     title = Column(
         VARCHAR(32),
+        nullable=False,
     )
     serial_number = Column(
         VARCHAR(128),
@@ -25,6 +27,7 @@ class Service_Center(Base):
     title = Column(
         VARCHAR(32),
         unique=True,
+        nullable=False,
     )
     contact = Column(
         TEXT,
@@ -49,6 +52,7 @@ class Client(Base):
     name = Column(
         VARCHAR(64),
         unique=True,
+        nullable=False,
     )
     contact = Column(
         TEXT,
@@ -59,6 +63,7 @@ class Provider(Base):
     title = Column(
         VARCHAR(32),
         unique=True,
+        nullable=False,
     )
     contact = Column(
         TEXT,
