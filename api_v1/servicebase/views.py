@@ -2,8 +2,9 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from . import crud
-from .schemas import Brand, BrandCreate
+from .schemas import Brand, BrandCreate, BrandUpdate
 from core.database import db_helper
+from .dependencies import brand_by_id
 
 router = APIRouter(tags=["Brands"])
 
@@ -25,14 +26,19 @@ async def create_brand(
 
 @router.get(path="/{brand_id}/", response_model=Brand)
 async def get_brand(
-    brand_id: int,
+    brand: Brand = Depends(brand_by_id),
+):
+    return brand
+
+
+@router.put(path="/{brand_id}/")
+async def update_brand(
+    brand_update: BrandUpdate,
+    brand: Brand = Depends(brand_by_id),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
-    brand = await crud.get_brand(brand_id=brand_id, session=session)
-    if brand is not None:
-        return brand
-
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"Brand {brand_id} not found!",
+    return await crud.update_brand(
+        session=session,
+        brand=brand,
+        brand_update=brand_update,
     )

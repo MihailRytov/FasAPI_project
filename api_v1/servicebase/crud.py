@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api_v1.servicebase.schemas import BrandCreate
+from api_v1.servicebase.schemas import BrandCreate, BrandUpdate, BrandUpdatePartial
 from core.database import Brand
 from sqlalchemy.engine import Result
 
@@ -39,3 +39,44 @@ async def create_brand(session: AsyncSession, brand_in: BrandCreate) -> Brand:
     """
     # await session.refresh(brand)
     return brand
+
+
+"""
+Обновляем (вносим изменение в текущую запись в БД
+"""
+
+
+async def update_brand(
+    session: AsyncSession,
+    brand: Brand,
+    brand_update: BrandUpdate,
+) -> Brand:
+    for name, value in brand_update.model_dump().items():
+        setattr(brand, name, value)
+    await session.commit()
+    return brand
+
+
+"""
+Вносим частичные изменения в запись. В случае таблицы brands
+данная функция будет полностью копировать предыдущую т.к. имеем только одно поле.
+"""
+
+
+async def update_brand_partial(
+    session: AsyncSession,
+    brand: Brand,
+    brand_update: BrandUpdatePartial,
+):
+    for name, value in brand_update.model_dump(exclude_unset=True).items():
+        setattr(brand, name, value)
+    await session.commit()
+    return brand
+
+
+async def delete_brand(
+    session: AsyncSession,
+    brand: Brand,
+) -> None:
+    await session.delete(brand)
+    await session.commit()

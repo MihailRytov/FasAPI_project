@@ -15,4 +15,12 @@ class BrandCreate(BrandBase):
     pass
 
 
+class BrandUpdate(BrandCreate):
+    pass
+
+
+class BrandUpdatePartial(BrandCreate):
+    title: str | None = None
+
+
 # test:int = BrandCreate.
