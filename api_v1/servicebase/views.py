@@ -9,14 +9,16 @@ router = APIRouter(tags=["Brands"])
 
 
 @router.get(path="/", response_model=list[Brand])
-async def get_brands(session: AsyncSession = Depends(db_helper.session_dependency)):
+async def get_brands(
+    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+):
     return await crud.get_brands(session=session)
 
 
 @router.post(path="/", response_model=Brand)
 async def create_brand(
     brand_in: BrandCreate,
-    session: AsyncSession = Depends(db_helper.session_dependency),
+    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     return await crud.create_brand(brand_in=brand_in, session=session)
 
@@ -24,7 +26,7 @@ async def create_brand(
 @router.get(path="/{brand_id}/", response_model=Brand)
 async def get_brand(
     brand_id: int,
-    session: AsyncSession = Depends(db_helper.session_dependency),
+    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     brand = await crud.get_brand(brand_id=brand_id, session=session)
     if brand is not None:

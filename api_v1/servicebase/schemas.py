@@ -5,11 +5,14 @@ class BrandBase(BaseModel):
     title: str
 
 
-class BrandCreate(BrandBase):
-    pass
-
-
 class Brand(BrandBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+
+
+class BrandCreate(BrandBase):
+    pass
+
+
+# test:int = BrandCreate.

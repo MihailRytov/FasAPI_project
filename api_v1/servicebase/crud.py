@@ -24,6 +24,7 @@ async def create_brand(session: AsyncSession, brand_in: BrandCreate) -> Brand:
     Через ** разбираем на отдельные аргументы (**kwargs)
     """
     brand = Brand(**brand_in.model_dump())
+
     """
     Добавляем в сессию это объект для отслеживания
     """
