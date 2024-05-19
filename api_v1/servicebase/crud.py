@@ -44,17 +44,17 @@ async def create_brand(session: AsyncSession, brand_in: BrandCreate) -> Brand:
 """
 Обновляем (вносим изменение в текущую запись в БД
 """
-
-
-async def update_brand(
-    session: AsyncSession,
-    brand: Brand,
-    brand_update: BrandUpdate,
-) -> Brand:
-    for name, value in brand_update.model_dump().items():
-        setattr(brand, name, value)
-    await session.commit()
-    return brand
+#
+#
+# async def update_brand(
+#     session: AsyncSession,
+#     brand: Brand,
+#     brand_update: BrandUpdate,
+# ) -> Brand:
+#     for name, value in brand_update.model_dump().items():
+#         setattr(brand, name, value)
+#     await session.commit()
+#     return brand
 
 
 """
@@ -63,12 +63,13 @@ async def update_brand(
 """
 
 
-async def update_brand_partial(
+async def update_brand(
     session: AsyncSession,
     brand: Brand,
-    brand_update: BrandUpdatePartial,
-):
-    for name, value in brand_update.model_dump(exclude_unset=True).items():
+    brand_update: BrandUpdate | BrandUpdatePartial,
+    partial: bool = False,
+) -> Brand:
+    for name, value in brand_update.model_dump(exclude_unset=partial).items():
         setattr(brand, name, value)
     await session.commit()
     return brand

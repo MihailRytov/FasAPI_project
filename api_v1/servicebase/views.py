@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from . import crud
-from .schemas import Brand, BrandCreate, BrandUpdate
+from .schemas import Brand, BrandCreate, BrandUpdate, BrandUpdatePartial
 from core.database import db_helper
 from .dependencies import brand_by_id
 
@@ -16,7 +16,11 @@ async def get_brands(
     return await crud.get_brands(session=session)
 
 
-@router.post(path="/", response_model=Brand)
+@router.post(
+    path="/",
+    response_model=Brand,
+    status_code=status.HTTP_201_CREATED,
+)
 async def create_brand(
     brand_in: BrandCreate,
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
@@ -42,3 +46,25 @@ async def update_brand(
         brand=brand,
         brand_update=brand_update,
     )
+
+
+@router.patch(path="/{brand_id}/")
+async def update_brand_partial(
+    brand_update: BrandUpdatePartial,
+    brand: Brand = Depends(brand_by_id),
+    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+):
+    return await crud.update_brand(
+        session=session,
+        brand=brand,
+        brand_update=brand_update,
+        partial=True,
+    )
+
+
+@router.delete(path="/brand_id/", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_brand(
+    brand: Brand = Depends(brand_by_id),
+    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+) -> None:
+    await crud.delete_brand(session=session, brand=brand)
