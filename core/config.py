@@ -7,7 +7,7 @@ DATABASE_URL: str = f"sqlite+aiosqlite:///{BASE_DIR}/servicebase"
 
 
 class Setting(BaseSettings):
-    api_v1_prefix: str = "/api/v1/"
+    api_v1_prefix: str = "/api/v1"
     db_url: str = DATABASE_URL
     db_echo: bool = True
 
